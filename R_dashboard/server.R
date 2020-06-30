@@ -81,6 +81,42 @@ shinyServer(function(input, output, session) {
   
   new.function2 <- function(j) { print(paste("the value is",j))}
 
+  
+  
+  
+  # CONDITONAL PANELS  
+  output$userpanel <- renderUI({
+    # DSI MEMBERS
+    if (input$password == 'password') {
+      sidebarMenu(
+        menuItem("Logged in as " ,badgeLabel = "DSI member", badgeColor = "blue"),
+        menuItem(h3("DSI Menu")),
+        menuItem("Metrics",icon=icon("tasks"),tabName = "metric1"),
+        menuItem("Summary",icon=icon("book"),tabName = "summary"),
+        menuItem("Documentation",icon=icon("book"),tabName = "documentation",badgeLabel = "new", badgeColor = "green"),
+        menuItem("Deliverables",icon=icon("truck"),tabName = "deliveries"),
+        menuItem("WIP",icon=icon("tasks"),tabName = "wip"),
+        menuItem("Data",icon=icon("database"),tabName = "SourceData"),
+        menuItem("About",icon=icon("question-circle"),tabName = "about")
+      )
+    }
+    # GUEST
+    else if (input$password != 'password') {
+      sidebarMenu(
+        menuItem("Logged in as ", badgeLabel = "Guest", badgeColor="yellow"),
+        menuItem(h3("Guest Menu")),
+        menuItem("Metrics",icon=icon("tasks"),tabName = "metric1"),
+        menuItem("Summary",icon=icon("book"),tabName = "summary"),
+        menuItem("Documentation",icon=icon("book"),tabName = "documentation",badgeLabel = "new", badgeColor = "green"),
+        menuItem("About",icon=icon("question-circle"),tabName = "about")
+      )
+    }
+  })
+  
+  
+  
+  
+  
 })
 
 dbDisconnect(con)
