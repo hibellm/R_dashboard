@@ -1,0 +1,4 @@
+default:
+  app_name: "R_dashboard"
+  db:
+    dbname: 'www/myassets/data/mtcars.sqlite3'
