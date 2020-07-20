@@ -21,98 +21,21 @@
 car_down_module <- function(input, output, session, modal_title, car_to_down, modal_trigger) {
   ns <- session$ns
   
+  
+  # DOWNLOAD DATA
   observeEvent(modal_trigger(), {
     hold <- car_to_down()
     
     showModal(
       modalDialog(
         fluidRow(
-          column(
-            width = 6,
-            textInput(
-              ns("model"),
-              'Model',
-              value = ifelse(is.null(hold), "", hold$model)
-            ),
-            numericInput(
-              ns('mpg'),
-              'Miles/Gallon',
-              value = ifelse(is.null(hold), "", hold$mpg),
-              min = 0,
-              step = 0.1
-            ),
-            selectInput(
-              ns('am'),
-              'Transmission',
-              choices = c('Automatic', 'Manual'),
-              selected = ifelse(is.null(hold), "", hold$am)
-            ),
-            numericInput(
-              ns('disp'),
-              'Displacement (cu.in.)',
-              value = ifelse(is.null(hold), "", hold$disp),
-              min = 0,
-              step = 0.1
-            ),
-            numericInput(
-              ns('hp'),
-              'Horsepower',
-              value = ifelse(is.null(hold), "", hold$hp),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('drat'),
-              'Rear Axle Ratio',
-              value = ifelse(is.null(hold), "", hold$drat),
-              min = 0,
-              step = 0.01
-            )
-          ),
-          column(
-            width = 6,
-            numericInput(
-              ns('wt'),
-              'Weight (lbs)',
-              value = ifelse(is.null(hold), "", hold$wt),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('qsec'),
-              '1/4 Mile Time',
-              value = ifelse(is.null(hold), "", hold$qsec),
-              min = 0,
-              step = 0.01
-            ),
-            selectInput(
-              ns('vs'),
-              'Engine',
-              choices = c('Straight', 'V-shaped'),
-              selected = ifelse(is.null(hold), "", hold$vs)
-            ),
-            numericInput(
-              ns('cyl'),
-              'Cylinders',
-              value = ifelse(is.null(hold), "", hold$cyl),
-              min = 0,
-              max = 20,
-              step = 1
-            ),
-            numericInput(
-              ns('gear'),
-              'Forward Gears',
-              value = ifelse(is.null(hold), "", hold$gear),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('carb'),
-              'Carburetors',
-              value = ifelse(is.null(hold), "", hold$carb),
-              min = 0,
-              step = 1
-            )
+          column(width = 6,
+                 textInput(ns("model"),'Model',value = ifelse(is.null(hold), "", hold$model)),
+                 numericInput(ns('mpg'),'Miles/Gallon',value = ifelse(is.null(hold), "", hold$mpg),min = 0,step = 0.1),
+                 selectInput(ns('am'),'Transmission',choices = c('Automatic', 'Manual'),selected = ifelse(is.null(hold), "", hold$am)),
+                 numericInput(ns('disp'),'Displacement (cu.in.)',value = ifelse(is.null(hold), "", hold$disp),min = 0,step = 0.1),
+                 numericInput(ns('hp'),'Horsepower',value = ifelse(is.null(hold), "", hold$hp),min = 0,step = 1),
+                 numericInput(ns('drat'),'Rear Axle Ratio',value = ifelse(is.null(hold), "", hold$drat),min = 0,step = 0.01)
           )
         ),
         title = modal_title,

@@ -1,18 +1,3 @@
-# library(shiny)
-# library(shinydashboard)
-# library(tidyverse)
-# library(DT)
-# library(dash)
-# library(plotly)
-# library(scales)
-# library(shinyjs)
-# library(RMySQL)
-# library(mongolite)
-# library(jsonlite)
-# library(shinycssloaders)
-# library(lubridate)
-# library(shinyFeedback)
-
 
 # MAKE SOME SUMMARY TO THE DATA FOR DISPLAY
 iris2 <- as.data.frame(iris)
@@ -154,7 +139,7 @@ shinyServer(function(input, output, session) {
       sidebarMenu(
         menuItem("Logged in as " ,badgeLabel = "DSI member", badgeColor = "blue"),
         menuItem(h3("DSI Menu")),
-        menuItem("Metrics",icon=icon("tasks"),tabName = "metric1"),
+        menuItem("Metrics",icon=icon("tasks"),tabName = "metrics1"),
         menuItem("Summary",icon=icon("book"),tabName = "summary"),
         menuItem("Documentation",icon=icon("book"),tabName = "documentation", badgeLabel = "new", badgeColor = "green"),
         menuItem("Deliverables",icon=icon("truck"),tabName = "deliveries"),
@@ -168,14 +153,16 @@ shinyServer(function(input, output, session) {
       sidebarMenu(
         menuItem("Logged in as ", badgeLabel = "Guest", badgeColor="yellow"),
         menuItem(h3("Guest Menu")),
-        menuItem("Metrics",icon=icon("tasks"),tabName = "metric1"),
+        menuItem("Testing of data",icon=icon("table"),tabName = "datatest"),
+        menuItem("Testing of data",icon=icon("table"),tabName = "datatest2"),
+        menuItem("Metrics",icon=icon("tasks"),tabName = "metrics1"),
         menuItem("Summary",icon=icon("book"),tabName = "summary"),
         menuItem("Documentation",icon=icon("book"),tabName = "documentation", badgeLabel = "new", badgeColor = "green"),
         menuItem("About",icon=icon("question-circle"),tabName = "about")
       )
     }
   })
-  
+
   # ABOUT
   # output$abouttab <- renderUI({
   #   tabItem(tabName = "about",
@@ -230,7 +217,110 @@ shinyServer(function(input, output, session) {
     )
   })
   
-   
+  output$groupsicon <- renderUI({
+    box(
+      title = "User List example",
+      status = "success",
+      width = NULL,
+      userList(
+        userListItem(
+          src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", 
+          user_name = "Shiny", 
+          description = "28.04.2018"
+        ),
+        userListItem(
+          src = "https://www.rstudio.com/wp-content/uploads/2014/04/knitr.png", 
+          user_name = "knitr", 
+          description = "28.04.2018"
+        ),
+        userListItem(
+          src = "https://www.rstudio.com/wp-content/uploads/2017/05/rmarkdown.png", 
+          user_name = "Rmarkdown", 
+          description = "28.04.2018"
+        ),
+        userListItem(
+          src = "https://d33wubrfki0l68.cloudfront.net/071952491ec4a6a532a3f70ecfa2507af4d341f9/c167c/images/hex-dplyr.png", 
+          user_name = "Tidyverse", 
+          description = "28.04.2018"
+        ),
+        userListItem(
+          src = "https://www.rstudio.com/wp-content/uploads/2014/04/tidyr.png", 
+          user_name = "tidyr", 
+          description = "28.04.2018"
+        ),
+        userListItem(
+          src = "https://www.rstudio.com/wp-content/uploads/2014/04/packrat.png", 
+          user_name = "packrat", 
+          description = "28.04.2018"
+        ),
+        userListItem(
+          src = "https://www.rstudio.com/wp-content/uploads/2014/04/sparklyr.png", 
+          user_name = "packrat", 
+          description = "28.04.2018"
+        )
+      )
+    )
+  })
+  
+  output$person1 <- renderUI({
+    widgetUserBox(
+      title = "Elizabeth Pierce",
+      subtitle = "Web Designer",
+      type = NULL,
+      width = 12,
+      src = "./myassets/images/banners/th1.jpg",
+      background = TRUE,
+      backgroundUrl = "./myassets/images/banners/th1.jpg?auto=compress&cs=tinysrgb&h=350",
+      closable = FALSE,
+      "Some text here!",
+      footer = "The footer here!"
+    )
+  })
+  
+  output$person2 <- renderUI({
+    widgetUserBox(
+      title = "Elizabeth Pierce",
+      subtitle = "Web Designer",
+      type = NULL,
+      width = 12,
+      src = "./myassets/images/banners/th1.jpg",
+      background = TRUE,
+      backgroundUrl = "./myassets/images/banners/th1.jpg?auto=compress&cs=tinysrgb&h=350",
+      closable = FALSE,
+      "Some text here!",
+      footer = "The footer here!"
+    )
+  })
+  output$person3 <- renderUI({
+    widgetUserBox(
+      title = "Elizabeth Pierce",
+      subtitle = "Web Designer",
+      type = NULL,
+      width = 12,
+      src = "./myassets/images/banners/th1.jpg",
+      background = TRUE,
+      backgroundUrl = "./myassets/images/banners/th1.jpg?auto=compress&cs=tinysrgb&h=350",
+      closable = FALSE,
+      "Some text here!",
+      footer = "The footer here!"
+    )
+  })
+  output$person4 <- renderUI({
+    widgetUserBox(
+      title = "Elizabeth Pierce",
+      subtitle = "Web Designer",
+      type = NULL,
+      width = 12,
+      src = "./myassets/images/banners/th2.jpg",
+      background = TRUE,
+      backgroundUrl = "./myassets/images/banners/th2.jpg?auto=compress&cs=tinysrgb&h=350",
+      closable = FALSE,
+      "Some text here!",
+      footer = "The footer here!"
+    )
+  })
+  
+    
   
   # TIMELINE
   data <- data.frame(
@@ -286,6 +376,74 @@ shinyServer(function(input, output, session) {
       type = "success"
     )
   })  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  # Call the server function portion of the `cars_table_module.R` module file
+  callModule(
+    cars_table_module,
+    "cars_table"
+  )
+  
+  
+  # RENDERS THE TABLE
+  output$mjh <- renderDT({
+    
+    out <- conn$find() %>%
+      dplyr::mutate(created_at = as.POSIXct(Sys.Date(), tz = "UTC"),
+                    modified_at = as.POSIXct(Sys.Date(), tz = "UTC"),
+                    created_by = 'Me',
+                    modifed_by = '') %>%
+      collect()
+    
+    datatable(
+      out,
+      rownames = FALSE,
+      # colnames = c('Model', 'Miles/Gallon', 'Cylinders', 'Displacement (cu.in.)',
+      #              'Horsepower', 'Rear Axle Ratio', 'Weight (lbs)', '1/4 Mile Time',
+      #              'Engine', 'Transmission', 'Forward Gears', 'Carburetors', 'Created At',
+      #              'Created By', 'Modified At', 'Modified By'),
+      colnames = c('Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width', 'Species', 'mjh','test','id_','Created At',
+                   'Modified At', 'Created By', 'Modified By'),
+      selection = "none",
+      class = "compact stripe row-border nowrap",
+      # Escape the HTML in all except 1st column (which has the buttons)
+      escape = -1,
+      extensions = c("Buttons"),
+      options = list(
+        scrollX = TRUE,
+        dom = 'Bftip',
+        buttons = list(
+          list(
+            extend = "excel",
+            text = "Download",
+            title = paste0("mtcars-", Sys.Date()),
+            exportOptions = list(
+              columns = 1:(length(out) - 1)
+            )
+          )
+        ),
+        columnDefs = list(
+          list(targets = 0, orderable = FALSE)
+        )
+      )
+    ) #%>%
+      # formatDate(
+      #   columns = c("Created At", "Modified At"),
+      #   method = 'toLocaleString'
+      # )
+    
+  })
+  
+  
+  
   
 })
 

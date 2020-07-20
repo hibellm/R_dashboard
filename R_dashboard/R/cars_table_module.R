@@ -39,7 +39,7 @@ cars_table_module_ui <- function(id) {
         tags$br()
       )
     ),
-    tags$script(src = "www/myassets/js/cars_table_module.js"),
+    tags$script(src = "./myassets/js/cars_table_module.js"),
     tags$script(paste0("cars_table_module_js('", ns(''), "')"))
   )
 }
@@ -60,7 +60,7 @@ cars_table_module_ui <- function(id) {
 
 cars_table_module <- function(input, output, session) {
 
-  # trigegr to reload data from the "mtcars" table
+  # trigger to reload data from the "mtcars" table
   session$userData$mtcars_trigger <- reactiveVal(0)
 
   # Read in "mtcars" table from the database
@@ -69,13 +69,12 @@ cars_table_module <- function(input, output, session) {
 
     out <- NULL
     tryCatch({
-      out <- conn %>%
-        tbl('mtcars') %>%
-        collect() %>%
-        mutate(
-          created_at = as.POSIXct(created_at, tz = "UTC"),
-          modified_at = as.POSIXct(modified_at, tz = "UTC")
-        ) %>%
+      out <- conn$find() %>%
+        dplyr::mutate(created_at = as.POSIXct(Sys.Date(), tz = "UTC"),
+                      modified_at = as.POSIXct(Sys.Date(), tz = "UTC"),
+                      created_by = 'Me',
+                      modifed_by = '') %>%
+            collect() %>%
         arrange(desc(modified_at))
     }, error = function(err) {
       print(err)
@@ -85,6 +84,7 @@ cars_table_module <- function(input, output, session) {
   })
 
 
+  #FUNCTION TO PREPARE THE DATA
   car_table_prep <- reactiveVal(NULL)
 
   observeEvent(cars(), {
@@ -117,7 +117,6 @@ cars_table_module <- function(input, output, session) {
       # loading data into the table for the first time, so we render the entire table
       # rather than using a DT proxy
       car_table_prep(out)
-
     } else {
       # manually hide the tooltip from the row so that it doesn't get stuck
       # when the row is deleted
@@ -128,17 +127,21 @@ cars_table_module <- function(input, output, session) {
     }
   })
 
+  # RENDERS THE TABLE
   output$car_table <- renderDT({
     req(car_table_prep())
     out <- car_table_prep()
 
+    print(out[5,])
     datatable(
       out,
       rownames = FALSE,
-      colnames = c('Model', 'Miles/Gallon', 'Cylinders', 'Displacement (cu.in.)',
-                   'Horsepower', 'Rear Axle Ratio', 'Weight (lbs)', '1/4 Mile Time',
-                   'Engine', 'Transmission', 'Forward Gears', 'Carburetors', 'Created At',
-                   'Created By', 'Modified At', 'Modified By'),
+      # colnames = c('Model', 'Miles/Gallon', 'Cylinders', 'Displacement (cu.in.)',
+      #              'Horsepower', 'Rear Axle Ratio', 'Weight (lbs)', '1/4 Mile Time',
+      #              'Engine', 'Transmission', 'Forward Gears', 'Carburetors', 'Created At',
+      #              'Created By', 'Modified At', 'Modified By'),
+      colnames = c('Sepal Length', 'Sepal Width', 'Petal Length', 'Petal Width', 'Species', 'mjh','test','id_','Created At',
+                   'Modified At', 'Created By', 'Modified By'),
       selection = "none",
       class = "compact stripe row-border nowrap",
       # Escape the HTML in all except 1st column (which has the buttons)
@@ -162,10 +165,7 @@ cars_table_module <- function(input, output, session) {
         )
       )
     ) %>%
-      formatDate(
-        columns = c("created_at", "modified_at"),
-        method = 'toLocaleString'
-      )
+       formatDate(c("created_at", "modified_at"), 'toDateString')
 
   })
 
@@ -196,8 +196,8 @@ cars_table_module <- function(input, output, session) {
   #DOWN
   callModule(
     car_down_module,
-    "add_car",
-    modal_title = "Add Car",
+    "dl_car",
+    modal_title = "Downlload Car",
     car_to_down = function() NULL,
     modal_trigger = reactive({input$add_car})
   )
@@ -218,8 +218,8 @@ cars_table_module <- function(input, output, session) {
   #INFO
   callModule(
     car_info_module,
-    "add_car",
-    modal_title = "Add Car",
+    "info_car",
+    modal_title = "Information Car",
     car_to_info = function() NULL,
     modal_trigger = reactive({input$add_car})
   )
@@ -231,7 +231,7 @@ cars_table_module <- function(input, output, session) {
 
   callModule(
     car_info_module,
-    "edit_car",
+    "info_car",
     modal_title = "Information details",
     car_to_info = car_to_info,
     modal_trigger = reactive({input$car_id_to_info})

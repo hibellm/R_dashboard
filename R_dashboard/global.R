@@ -3,6 +3,7 @@
 # library in packages used in this application
 library(shiny)
 library(shinydashboard)
+library(shinydashboardPlus)
 library(shinycssloaders)
 library(shinyjs)
 library(shinyFeedback)
@@ -45,14 +46,18 @@ jira <- dbReadTable(con, "jira")
 
 # MONGODB
 mcon <- mongo(collection = "metrics", db = "dsi")
-# mcon2 <- mongo(collection = "task", db = "dsi")
-# mcon3 <- mongo(collection = "notifications", db = "dsi")
-# mcon4 <- mongo(collection = "messages", db = "dsi")
 tnmcon <- mongo(collection = "tsknotmsg", db = "dsi")
 tlcon <- mongo(collection = "timeline", db = "dsi")
 
 
 # # Create database connection
+conn <-mongo(collection = "iris", db = "dsi")
+# iris2out<-iris2 %>%
+#   dplyr::mutate(uid = uuid::UUIDgenerate(n=nrow(iris2)))
+# conn$insert(iris2out)
+
+
+
 # conn <- dbConnect(
 #   RSQLite::SQLite(),
 #   dbname = db_config$dbname

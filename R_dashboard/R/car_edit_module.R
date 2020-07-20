@@ -21,6 +21,7 @@
 car_edit_module <- function(input, output, session, modal_title, car_to_edit, modal_trigger) {
   ns <- session$ns
   
+  # EDIT DATA MODAL
   observeEvent(modal_trigger(), {
     hold <- car_to_edit()
     
@@ -32,12 +33,12 @@ car_edit_module <- function(input, output, session, modal_title, car_to_edit, mo
             textInput(
               ns("model"),
               'Model',
-              value = ifelse(is.null(hold), "", hold$model)
+              value = ifelse(is.null(hold), "", hold$Sepal_Width)
             ),
             numericInput(
               ns('mpg'),
               'Miles/Gallon',
-              value = ifelse(is.null(hold), "", hold$mpg),
+              value = ifelse(is.null(hold), "", hold$Sepal_Length),
               min = 0,
               step = 0.1
             ),
@@ -45,75 +46,21 @@ car_edit_module <- function(input, output, session, modal_title, car_to_edit, mo
               ns('am'),
               'Transmission',
               choices = c('Automatic', 'Manual'),
-              selected = ifelse(is.null(hold), "", hold$am)
+              selected = ifelse(is.null(hold), "", hold$Petal_Width)
             ),
             numericInput(
               ns('disp'),
-              'Displacement (cu.in.)',
-              value = ifelse(is.null(hold), "", hold$disp),
+              'Displacement (cu.in.)',hold$Petal_Length),
               min = 0,
               step = 0.1
             ),
             numericInput(
               ns('hp'),
               'Horsepower',
-              value = ifelse(is.null(hold), "", hold$hp),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('drat'),
-              'Rear Axle Ratio',
-              value = ifelse(is.null(hold), "", hold$drat),
-              min = 0,
-              step = 0.01
-            )
-          ),
-          column(
-            width = 6,
-            numericInput(
-              ns('wt'),
-              'Weight (lbs)',
-              value = ifelse(is.null(hold), "", hold$wt),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('qsec'),
-              '1/4 Mile Time',
-              value = ifelse(is.null(hold), "", hold$qsec),
-              min = 0,
-              step = 0.01
-            ),
-            selectInput(
-              ns('vs'),
-              'Engine',
-              choices = c('Straight', 'V-shaped'),
-              selected = ifelse(is.null(hold), "", hold$vs)
-            ),
-            numericInput(
-              ns('cyl'),
-              'Cylinders',
-              value = ifelse(is.null(hold), "", hold$cyl),
-              min = 0,
-              max = 20,
-              step = 1
-            ),
-            numericInput(
-              ns('gear'),
-              'Forward Gears',
-              value = ifelse(is.null(hold), "", hold$gear),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('carb'),
-              'Carburetors',
-              value = ifelse(is.null(hold), "", hold$carb),
+              value = ifelse(is.null(hold), "", hold$Species),
               min = 0,
               step = 1
             )
-          )
         ),
         title = modal_title,
         size = 'm',
@@ -156,18 +103,11 @@ car_edit_module <- function(input, output, session, modal_title, car_to_edit, mo
     out <- list(
       uid = if (is.null(hold)) NA else hold$uid,
       data = list(
-        "model" = input$model,
-        "mpg" = input$mpg,
-        "cyl" = input$cyl,
-        "disp" = input$disp,
-        "hp" = input$hp,
-        "drat" = input$drat,
-        "wt" = input$wt,
-        "qsec" = input$qsec,
-        "vs" = input$vs,
-        "am" = input$am,
-        "gear" = input$gear,
-        "carb" = input$carb
+        "model" = input$Sepal_Width,
+        "mpg" = input$Sepal_Length,
+        "cyl" = input$Petal_Width,
+        "disp" = input$Petal_Length,
+        "hp" = input$Species
       )
     )
     
@@ -209,28 +149,29 @@ car_edit_module <- function(input, output, session, modal_title, car_to_edit, mo
         # creating a new car
         uid <- uuid::UUIDgenerate()
         
-        dbExecute(
-          conn,
-          "INSERT INTO mtcars (uid, model, mpg, cyl, disp, hp, drat, wt, qsec, vs, am,
-          gear, carb, created_at, created_by, modified_at, modified_by) VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)",
-          params = c(
-            list(uid),
-            unname(dat$data)
-          )
-        )
+        # dbExecute(
+        #   conn,
+        #   "INSERT INTO mtcars (uid, model, mpg, cyl, disp, hp, drat, wt, qsec, vs, am,
+        #   gear, carb, created_at, created_by, modified_at, modified_by) VALUES
+        #   ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)",
+        #   params = c(
+        #     list(uid),
+        #     unname(dat$data)
+        #   )
+        # )
       } else {
         # editing an existing car
-        dbExecute(
-          conn,
-          "UPDATE mtcars SET model=$1, mpg=$2, cyl=$3, disp=$4, hp=$5, drat=$6,
-          wt=$7, qsec=$8, vs=$9, am=$10, gear=$11, carb=$12, created_at=$13, created_by=$14,
-          modified_at=$15, modified_by=$16 WHERE uid=$17",
-          params = c(
-            unname(dat$data),
-            list(dat$uid)
-          )
-        )
+        conn$insert(dat$data)
+        # dbExecute(
+        #   conn,
+        #   "UPDATE mtcars SET model=$1, mpg=$2, cyl=$3, disp=$4, hp=$5, drat=$6,
+        #   wt=$7, qsec=$8, vs=$9, am=$10, gear=$11, carb=$12, created_at=$13, created_by=$14,
+        #   modified_at=$15, modified_by=$16 WHERE uid=$17",
+        #   params = c(
+        #     unname(dat$data),
+        #     list(dat$uid)
+        #   )
+        # )
       }
       
       session$userData$mtcars_trigger(session$userData$mtcars_trigger() + 1)

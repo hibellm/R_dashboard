@@ -21,6 +21,7 @@
 car_info_module <- function(input, output, session, modal_title, car_to_info, modal_trigger) {
   ns <- session$ns
   
+  # THE INFO MODAL
   observeEvent(modal_trigger(), {
     hold <- car_to_info()
     
@@ -30,90 +31,37 @@ car_info_module <- function(input, output, session, modal_title, car_to_info, mo
           column(
             width = 6,
             textInput(
-              ns("model"),
+              ns("Sepal_Width"),
               'Model',
-              value = ifelse(is.null(hold), "", hold$model)
+              value = ifelse(is.null(hold), "", hold$Sepal_Width)
             ),
             numericInput(
-              ns('mpg'),
+              ns('Sepal_Length'),
               'Miles/Gallon',
-              value = ifelse(is.null(hold), "", hold$mpg),
+              value = ifelse(is.null(hold), "", hold$Sepal_Length),
               min = 0,
               step = 0.1
             ),
             textInput(
-              ns('am'),
+              ns('Petal_Width'),
               'Transmission',
               # choices = c('Automatic', 'Manual'),
-              value = ifelse(is.null(hold), "", hold$am)
+              value = ifelse(is.null(hold), "", hold$Petal_Width)
             ),
             numericInput(
-              ns('disp'),
+              ns('Petal_Length'),
               'Displacement (cu.in.)',
-              value = ifelse(is.null(hold), "", hold$disp),
+              value = ifelse(is.null(hold), "", hold$Petal_Length),
               min = 0,
               step = 0.1
             ),
             numericInput(
-              ns('hp'),
+              ns('Species'),
               'Horsepower',
-              value = ifelse(is.null(hold), "", hold$hp),
+              value = ifelse(is.null(hold), "", hold$Species),
               min = 0,
               step = 1
-            ),
-            numericInput(
-              ns('drat'),
-              'Rear Axle Ratio',
-              value = ifelse(is.null(hold), "", hold$drat),
-              min = 0,
-              step = 0.01
-            )
-          ),
-          column(
-            width = 6,
-            numericInput(
-              ns('wt'),
-              'Weight (lbs)',
-              value = ifelse(is.null(hold), "", hold$wt),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('qsec'),
-              '1/4 Mile Time',
-              value = ifelse(is.null(hold), "", hold$qsec),
-              min = 0,
-              step = 0.01
-            ),
-            selectInput(
-              ns('vs'),
-              'Engine',
-              choices = c('Straight', 'V-shaped'),
-              selected = ifelse(is.null(hold), "", hold$vs)
-            ),
-            numericInput(
-              ns('cyl'),
-              'Cylinders',
-              value = ifelse(is.null(hold), "", hold$cyl),
-              min = 0,
-              max = 20,
-              step = 1
-            ),
-            numericInput(
-              ns('gear'),
-              'Forward Gears',
-              value = ifelse(is.null(hold), "", hold$gear),
-              min = 0,
-              step = 1
-            ),
-            numericInput(
-              ns('carb'),
-              'Carburetors',
-              value = ifelse(is.null(hold), "", hold$carb),
-              min = 0,
-              step = 1
-            )
-          )
+            ))
         ),
         title = modal_title,
         size = 'm',
@@ -150,18 +98,11 @@ car_info_module <- function(input, output, session, modal_title, car_to_info, mo
     out <- list(
       uid = if (is.null(hold)) NA else hold$uid,
       data = list(
-        "model" = input$model,
-        "mpg" = input$mpg,
-        "cyl" = input$cyl,
-        "disp" = input$disp,
-        "hp" = input$hp,
-        "drat" = input$drat,
-        "wt" = input$wt,
-        "qsec" = input$qsec,
-        "vs" = input$vs,
-        "am" = input$am,
-        "gear" = input$gear,
-        "carb" = input$carb
+        "Sepal Width" = input$Sepal.Width,
+        "mpg" = input$Sepal.Length,
+        "cyl" = input$Petal.Width,
+        "disp" = input$Petal.Length,
+        "hp" = input$Species
       )
     )
     
@@ -169,19 +110,15 @@ car_info_module <- function(input, output, session, modal_title, car_to_info, mo
     
     if (is.null(hold)) {
       # adding a new car
-      
       out$data$created_at <- time_now
       out$data$created_by <- session$userData$email
     } else {
       # infoing existing car
-      
       out$data$created_at <- as.character(hold$created_at)
       out$data$created_by <- hold$created_by
     }
-    
     out$data$modified_at <- time_now
     out$data$modified_by <- session$userData$email
-    
     out
   })
   
@@ -189,7 +126,6 @@ car_info_module <- function(input, output, session, modal_title, car_to_info, mo
     dat <- info_car_dat()
     
     # Logic to validate inputs...
-    
     dat
   })
   
